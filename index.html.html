@@ -1,0 +1,453 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catálogo Estebania</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #f8dada;
+    font-family: Arial, sans-serif;
+    color: #5c202b;
+}
+
+header {
+    background: linear-gradient(135deg, #bd5555, #e67575);
+    color: white;
+    text-align: center;
+    padding: 30px 15px;
+    margin-bottom: 25px;
+}
+
+header h1 {
+    font-size: 32px;
+    text-transform: uppercase;
+}
+
+header p {
+    margin-top: 10px;
+}
+
+.contenedor {
+    width: 95%;
+    max-width: 1400px;
+    margin: auto;
+}
+
+.catalogo {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.producto {
+    background: white;
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(100,30,40,.15);
+    border: 1px solid #efb6bc;
+    display: flex;
+    flex-direction: column;
+}
+
+.producto img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    margin-bottom: 12px;
+}
+
+.producto h2 {
+    font-size: 17px;
+    margin: 8px 0;
+}
+
+.producto p {
+    margin: 6px 0;
+}
+
+.precio {
+    font-size: 21px;
+    font-weight: bold;
+    color: #bd333f;
+}
+
+button {
+    border: none;
+    border-radius: 8px;
+    padding: 11px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.boton {
+    background: #bd5555;
+    color: white;
+    margin-top: auto;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+
+.carrito {
+    background: white;
+    margin: 30px 0;
+    padding: 22px;
+    border-radius: 15px;
+}
+
+.carrito h2 {
+    margin-bottom: 15px;
+}
+
+.item-carrito {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid #efb6bc;
+    flex-wrap: wrap;
+}
+
+.controles {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.controles button {
+    background: #f2c1c6;
+}
+
+.total {
+    color: #bd333f;
+    font-size: 23px;
+    font-weight: bold;
+    margin: 18px 0;
+}
+
+.botones-carrito {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+#boton-pagar {
+    background: #27834a;
+    color: white;
+}
+
+#boton-vaciar {
+    background: #bd5555;
+    color: white;
+}
+
+#boton-completar {
+    background: #8e303c;
+    color: white;
+    margin-top: 12px;
+}
+
+#mensaje {
+    margin-top: 15px;
+    line-height: 1.5;
+}
+
+footer {
+    background: #bd5555;
+    color: white;
+    text-align: center;
+    padding: 18px;
+}
+
+@media (max-width: 900px) {
+    .catalogo {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .catalogo {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Catálogo Estebania</h1>
+    <p>Ropa interior para toda la familia</p>
+</header>
+
+<main class="contenedor">
+
+<section class="catalogo" id="catalogo"></section>
+
+<section class="carrito">
+    <h2>🛍️ Tu carrito</h2>
+
+    <div id="lista-carrito">
+        Tu carrito está vacío.
+    </div>
+
+    <p>Artículos seleccionados:
+        <strong id="cantidad-articulos">0</strong>
+    </p>
+
+    <p class="total">
+        TOTAL A PAGAR:
+        <span id="total">$0.00</span>
+    </p>
+
+    <div class="botones-carrito">
+        <button id="boton-pagar" disabled>
+            💳 Pagar
+        </button>
+
+        <button id="boton-vaciar">
+            🗑️ Vaciar carrito
+        </button>
+    </div>
+
+    <p id="mensaje"></p>
+
+    <button id="boton-completar" hidden>
+        Completar pago / confirmar pedido
+    </button>
+</section>
+
+</main>
+
+<footer>
+    <p>&copy; 2026 Estebania - Catálogo de productos</p>
+</footer>
+
+<script>
+// LISTA DE LOS 20 PRODUCTOS
+const productos = [
+    {id:1, nombre:"Pantis en algodón", precio:150, imagen:"PRODUCTO1.JPG"},
+    {id:2, nombre:"Pantis en algodón de colores", precio:150, imagen:"PRODUCTO2.JPG"},
+    {id:3, nombre:"Combo para damas y caballeros", precio:400, imagen:"PRODUCTO3.JPEG"},
+    {id:4, nombre:"Conjunto en algodón para dormir", precio:300, imagen:"PRODUCTO4.JPG"},
+    {id:5, nombre:"Pantis en algodón para niñas", precio:150, imagen:"PRODUCTO5.JPG"},
+    {id:6, nombre:"Pantis para niñas", precio:200, imagen:"PRODUCTO6.JPG"},
+    {id:7, nombre:"Boxer para caballeros", precio:100, imagen:"PRODUCTO7.PNG"},
+    {id:8, nombre:"Boxer tipo calcetín", precio:100, imagen:"PRODUCTO8.JPG"},
+    {id:9, nombre:"Brasieres para damas", precio:200, imagen:"PRODUCTO9.JPG"},
+    {id:10, nombre:"Conjunto de pantis y brasier", precio:250, imagen:"PRODUCTO10.JPG"},
+    {id:11, nombre:"Pantis", precio:100, imagen:"PRODUCTO11.PNG"},
+    {id:12, nombre:"Pantis de algodón, paquete de 3", precio:175, imagen:"PRODUCTO12.JPG"},
+    {id:13, nombre:"Boxer de colores", precio:180, imagen:"PRODUCTO13.JPG"},
+    {id:14, nombre:"Conjuntos de pantis y brasieres", precio:180, imagen:"PRODUCTO14.JPG"},
+    {id:15, nombre:"Especial de ropa interior", precio:45, imagen:"PRODUCTO15.JPG"},
+    {id:16, nombre:"Especial de ropa interior", precio:45, imagen:"PRODUCTO16.JPG"},
+    {id:17, nombre:"Pantis para niñas", precio:45, imagen:"PRODUCTO17.JPG"},
+    {id:18, nombre:"Especial de pantis, boxer y conjuntos", precio:45, imagen:"PRODUCTO18.JPG"},
+    {id:19, nombre:"Especial de pantis", precio:45, imagen:"PRODUCTO19.JPG"},
+    {id:20, nombre:"Pantis y boxer", precio:65, imagen:"PRODUCTO20.WEBP"}
+];
+
+let carrito = [];
+
+const catalogo = document.getElementById("catalogo");
+const listaCarrito = document.getElementById("lista-carrito");
+const totalElemento = document.getElementById("total");
+const cantidadElemento = document.getElementById("cantidad-articulos");
+const botonPagar = document.getElementById("boton-pagar");
+const botonVaciar = document.getElementById("boton-vaciar");
+const botonCompletar = document.getElementById("boton-completar");
+const mensaje = document.getElementById("mensaje");
+
+// FORMATEAR EL DINERO
+function dinero(valor) {
+    return "$" + valor.toLocaleString("es-DO", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+// MOSTRAR LOS PRODUCTOS
+productos.forEach(producto => {
+    const articulo = document.createElement("article");
+    articulo.className = "producto";
+
+    const imagen = document.createElement("img");
+    imagen.src = producto.imagen;
+    imagen.alt = producto.nombre;
+
+    const nombre = document.createElement("h2");
+    nombre.textContent = producto.nombre;
+
+    const precio = document.createElement("p");
+    precio.className = "precio";
+    precio.textContent = dinero(producto.precio);
+
+    const boton = document.createElement("button");
+    boton.type = "button";
+    boton.className = "boton";
+    boton.textContent = "Agregar al carrito";
+    boton.addEventListener("click", () => {
+        agregarAlCarrito(producto.id);
+    });
+
+    articulo.append(imagen, nombre, precio, boton);
+    catalogo.appendChild(articulo);
+});
+
+// AGREGAR AL CARRITO
+function agregarAlCarrito(id) {
+    const producto = productos.find(p => p.id === id);
+    const existente = carrito.find(p => p.id === id);
+
+    if (existente) {
+        existente.cantidad++;
+    } else {
+        carrito.push({...producto, cantidad:1});
+    }
+
+    mensaje.textContent = "";
+    botonCompletar.hidden = true;
+    mostrarCarrito();
+}
+
+// CAMBIAR LA CANTIDAD
+function cambiarCantidad(id, cambio) {
+    const producto = carrito.find(p => p.id === id);
+
+    if (!producto) return;
+
+    producto.cantidad += cambio;
+
+    if (producto.cantidad <= 0) {
+        carrito = carrito.filter(p => p.id !== id);
+    }
+
+    mensaje.textContent = "";
+    botonCompletar.hidden = true;
+    mostrarCarrito();
+}
+
+// SUMAR Y MOSTRAR LOS PEDIDOS
+function mostrarCarrito() {
+    listaCarrito.replaceChildren();
+
+    let total = 0;
+    let cantidad = 0;
+
+    if (carrito.length === 0) {
+        listaCarrito.textContent = "Tu carrito está vacío.";
+    }
+
+    carrito.forEach(producto => {
+        const fila = document.createElement("div");
+        fila.className = "item-carrito";
+
+        const nombre = document.createElement("strong");
+        nombre.textContent = producto.nombre;
+
+        const subtotal = document.createElement("span");
+        subtotal.textContent = dinero(
+            producto.precio * producto.cantidad
+        );
+
+        const controles = document.createElement("div");
+        controles.className = "controles";
+
+        const menos = document.createElement("button");
+        menos.type = "button";
+        menos.textContent = "−";
+        menos.addEventListener("click", () => {
+            cambiarCantidad(producto.id, -1);
+        });
+
+        const numero = document.createElement("span");
+        numero.textContent = producto.cantidad;
+
+        const mas = document.createElement("button");
+        mas.type = "button";
+        mas.textContent = "+";
+        mas.addEventListener("click", () => {
+            cambiarCantidad(producto.id, 1);
+        });
+
+        controles.append(menos, numero, mas);
+        fila.append(nombre, subtotal, controles);
+        listaCarrito.appendChild(fila);
+
+        total += producto.precio * producto.cantidad;
+        cantidad += producto.cantidad;
+    });
+
+    totalElemento.textContent = dinero(total);
+    cantidadElemento.textContent = cantidad;
+    botonPagar.disabled = carrito.length === 0;
+}
+
+// BOTÓN VACIAR CARRITO
+botonVaciar.addEventListener("click", () => {
+    carrito = [];
+    mostrarCarrito();
+
+    mensaje.textContent = "El carrito ha sido vaciado.";
+    botonCompletar.hidden = true;
+});
+
+// BOTÓN PAGAR
+botonPagar.addEventListener("click", () => {
+    if (carrito.length === 0) {
+        mensaje.textContent = "Agrega productos antes de pagar.";
+        return;
+    }
+
+    const total = carrito.reduce((suma, producto) =>
+        suma + producto.precio * producto.cantidad, 0
+    );
+
+    mensaje.textContent =
+        "Total de tu pedido: " + dinero(total) +
+        ". Este es un pedido de prueba; todavía no se ha cobrado dinero.";
+
+    botonCompletar.hidden = false;
+});
+
+/// BOTÓN COMPLETAR PAGO
+botonCompletar.addEventListener("click", () => {
+    if (carrito.length === 0) {
+        mensaje.textContent = "Tu carrito está vacío.";
+        return;
+    }
+
+    const total = carrito.reduce((suma, producto) =>
+        suma + producto.precio * producto.cantidad, 0
+    );
+
+    // Abrir el formulario de pago y enviar el total
+    window.location.href =
+        "formulario de pago estebania.html?total=" + total.toFixed(2);
+});
+
+    carrito = [];
+    mostrarCarrito();
+    botonCompletar.hidden = true;
+
+
+// INICIAR EL CARRITO
+mostrarCarrito();
+</script>
+
+</body>
+</html>
